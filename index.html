@@ -369,6 +369,58 @@
   .feedback-text.good{color:#5C7A3A;}
   .feedback-text.bad{color:var(--rust);}
 
+  .full-def{
+    margin-top:16px;
+    padding:14px 16px;
+    background:var(--paper-dim);
+    border-left:3px solid var(--gold);
+    border-radius:1px;
+    font-size:14px;
+    line-height:1.55;
+    color:var(--ink);
+    animation:pageIn .3s ease;
+  }
+  .full-def b{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--slate-dark);
+    display:block;
+    margin-bottom:6px;
+  }
+  .sense-row{
+    margin-top:6px;
+  }
+  .sense-row:first-of-type{margin-top:0;}
+  .sense-pos{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    font-style:normal;
+    text-transform:lowercase;
+    color:#7A6A3A;
+  }
+  .sense-tested{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--slate-dark);
+  }
+  .finish-row{
+    text-align:center;
+    margin-top:20px;
+  }
+  .btn-finish{
+    color:var(--slate);
+    border-color:var(--slate-dark);
+    background:transparent;
+  }
+  .btn-finish:hover{
+    color:var(--rust);
+    border-color:var(--rust);
+    background:transparent;
+  }
+
+
   /* ---------- Results ---------- */
   #results{display:none;}
   .results-card{
@@ -397,13 +449,13 @@
     color:#7A6A3A;
     margin-bottom:22px;
   }
-  .missed-list{
+  .review-list{
     text-align:left;
     border-top:1px solid var(--paper-line);
     padding-top:18px;
     margin-top:6px;
   }
-  .missed-list h3{
+  .review-list h3{
     font-family:'IBM Plex Mono', monospace;
     font-size:11px;
     letter-spacing:0.1em;
@@ -411,8 +463,73 @@
     color:var(--slate-dark);
     margin:0 0 12px;
   }
-  .missed-item{margin-bottom:12px; font-size:14.5px; line-height:1.5;}
-  .missed-item b{font-family:'Fraunces', serif; font-weight:600;}
+  .review-item{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:12px;
+    font-size:14.5px;
+    line-height:1.5;
+  }
+  .review-item b{font-family:'Fraunces', serif; font-weight:600;}
+  .review-mark{
+    flex-shrink:0;
+    width:18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    text-align:center;
+  }
+  .review-mark.right{color:#5C7A3A;}
+  .review-mark.wrong{color:var(--rust);}
+  .review-details{width:100%;}
+  .review-details summary{
+    cursor:pointer;
+    list-style:none;
+  }
+  .review-details summary::-webkit-details-marker{display:none;}
+  .review-details summary::before{
+    content:'+';
+    display:inline-block;
+    width:14px;
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--slate-dark);
+  }
+  .review-details[open] summary::before{content:'\2212';}
+  .review-details summary:hover{color:#7A5E00;}
+  .review-expanded{
+    margin:8px 0 4px 14px;
+    padding:10px 12px;
+    background:var(--paper-dim);
+    border-left:2px solid var(--gold);
+    font-size:13.5px;
+  }
+  .review-expanded .sense-row{margin-top:5px;}
+  .review-expanded .sense-row:first-child{margin-top:0;}
+  .continue-options{
+    text-align:left;
+    border-top:1px solid var(--paper-line);
+    padding-top:16px;
+    margin-top:6px;
+  }
+  .continue-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--slate-dark);
+    margin-bottom:10px;
+  }
+  .continue-btns{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+  }
+  .continue-btns .btn-ghost{
+    padding:8px 12px;
+    font-size:11.5px;
+  }
+
   .results-actions{
     display:flex;
     gap:10px;
@@ -439,12 +556,17 @@
   <!-- SETUP -->
   <section id="setup" class="panel">
     <label for="word-input">Word list (one per line, or comma-separated)</label>
-    <textarea id="word-input" placeholder="ephemeral&#10;laconic&#10;obfuscate&#10;sanguine&#10;capricious&#10;desultory">ephemeral, laconic, obfuscate, sanguine, capricious, desultory, opprobrium, opine, peremptory, irrefragable, heterodox, ignominious, engender, desuetude, louche, laconic, factitious, exhort, coruscate, neoteric, reverie, ersatz, caesura, abrogate, assiduous, antecedent, adventitious, beguile, obdurate, vulpine, perfidy, perfunctory, propitious, auspicious, calumny, effusive, captious, halcyon, gasconade, gregarious, dissemble, ablutions, approbation, sojourn, repast, recidivism, erstwhile, eschew, enervate, ignominious, ennui, eleemosynary, propitious, repine, osculate, cerulean, extemporaneous, broach, zaftig, avail, ratiocination, progenitor, verisimilitude, traduce, verbiage, replete, paradigm, perspicacious, aphorism, peccadillo, trite, dissemble, otiose, Urbane, engender, desuetude, diffident, demesne, thaumaturgy, taciturn, tacit, indurate, ineffable, jejune, lagniappe</textarea>
+    <textarea id="word-input" placeholder="ephemeral&#10;laconic&#10;obfuscate&#10;sanguine&#10;capricious&#10;desultory">laconic,desultory, opprobrium, opine, peremptory, irrefragable, heterodox, ignominious, engender, desuetude, louche, laconic, factitious, exhort, coruscate, neoteric, reverie, ersatz, caesura, abrogate, assiduous, antecedent, adventitious, beguile, obdurate, vulpine, perfidy, perfunctory, propitious, auspicious, calumny, effusive, captious, halcyon, gasconade, gregarious, dissemble, ablutions, approbation, sojourn, repast, recidivism, erstwhile, eschew, enervate, ignominious, ennui, eleemosynary, propitious, repine, osculate, cerulean, extemporaneous, broach, zaftig, avail, ratiocination, progenitor, verisimilitude, traduce, verbiage, replete, paradigm, perspicacious, aphorism, peccadillo, trite, dissemble, otiose, Urbane, engender, desuetude, diffident, demesne, thaumaturgy, taciturn, tacit, indurate, ineffable, jejune, lagniappe</textarea>
     <div class="hint">Definitions are pulled live from the free dictionaryapi.dev service — no AI involved. Aim for 6+ words so each question can offer a full set of wrong answers.</div>
     <div class="toggle-row">
       <input type="checkbox" id="autoplay-toggle">
       <label for="autoplay-toggle" class="switch" aria-hidden="true"></label>
       <label for="autoplay-toggle">Say the word aloud automatically when it appears</label>
+    </div>
+    <div class="toggle-row">
+      <input type="checkbox" id="options6-toggle">
+      <label for="options6-toggle" class="switch" aria-hidden="true"></label>
+      <label for="options6-toggle">Use 6 answer options instead of 4</label>
     </div>
     <button class="btn-primary" id="build-btn">Look up words &amp; build quiz</button>
     <div class="status" id="setup-status"></div>
@@ -478,6 +600,11 @@
         <span class="feedback-text" id="feedback"></span>
         <button class="btn-ghost" id="next-btn" style="display:none;">Next entry &rarr;</button>
       </div>
+      <div class="full-def" id="full-def" style="display:none;"></div>
+    </div>
+
+    <div class="finish-row">
+      <button class="btn-ghost btn-finish" id="finish-btn">Finish test now</button>
     </div>
   </section>
 
@@ -486,7 +613,15 @@
     <div class="results-card">
       <div class="verdict" id="verdict">Final tally</div>
       <div class="tally"><span id="final-score">0</span><small id="final-total">/ 0</small></div>
-      <div class="missed-list" id="missed-list"></div>
+      <div class="review-list" id="review-list"></div>
+      <div class="continue-options" id="continue-options" style="display:none;">
+        <div class="continue-label">Keep practicing</div>
+        <div class="continue-btns">
+          <button class="btn-ghost" id="continue-remaining-btn" style="display:none;">Continue where you stopped</button>
+          <button class="btn-ghost" id="continue-wrong-btn" style="display:none;">Retry mistakes only</button>
+          <button class="btn-ghost" id="continue-nonperfect-btn" style="display:none;">Redo everything except correct</button>
+        </div>
+      </div>
       <div class="results-actions">
         <button class="btn-ghost" id="restart-btn">Edit word list</button>
         <button class="btn-primary" id="retry-btn" style="margin-top:0;width:auto;padding:10px 18px;">Retry same words</button>
@@ -501,7 +636,7 @@
   "use strict";
 
   const API = "https://api.dictionaryapi.dev/api/v2/entries/en/";
-  const NUM_OPTIONS = 6; // 1 correct + 5 distractors
+  let quizOptionCount = 4; // 1 correct + 3 distractors by default; can be upgraded to 6 at setup
 
   const setupEl = document.getElementById('setup');
   const quizEl = document.getElementById('quiz');
@@ -511,6 +646,7 @@
   const buildBtn = document.getElementById('build-btn');
   const autoplayToggle = document.getElementById('autoplay-toggle');
   const autoplayToggleQuiz = document.getElementById('autoplay-toggle-quiz');
+  const options6Toggle = document.getElementById('options6-toggle');
   const setupStatus = document.getElementById('setup-status');
 
   const folioPos = document.getElementById('folio-pos');
@@ -522,21 +658,27 @@
   const qPos = document.getElementById('q-pos');
   let audioPlayer = null;
   const qOptions = document.getElementById('q-options');
+  const fullDefEl = document.getElementById('full-def');
   const feedback = document.getElementById('feedback');
   const nextBtn = document.getElementById('next-btn');
+  const finishBtn = document.getElementById('finish-btn');
 
   const verdict = document.getElementById('verdict');
   const finalScore = document.getElementById('final-score');
   const finalTotal = document.getElementById('final-total');
-  const missedList = document.getElementById('missed-list');
+  const reviewList = document.getElementById('review-list');
+  const continueOptions = document.getElementById('continue-options');
+  const continueRemainingBtn = document.getElementById('continue-remaining-btn');
+  const continueWrongBtn = document.getElementById('continue-wrong-btn');
+  const continueNonPerfectBtn = document.getElementById('continue-nonperfect-btn');
   const restartBtn = document.getElementById('restart-btn');
   const retryBtn = document.getElementById('retry-btn');
 
-  let entries = [];      // {word, phonetic, pos, definition, allDefs:[...]}
-  let questions = [];     // {word, phonetic, pos, correct, options:[...], correctIndex}
+  let entries = [];      // {word, phonetic, pos, definition, definitionFull, allDefs:[...]}
+  let questions = [];     // {word, phonetic, pos, correct, correctFull, options:[...], correctIndex}
   let qIndex = 0;
   let score = 0;
-  let missed = [];
+  let answered = [];      // {word, correctFull, wasCorrect} for every question actually answered
   let locked = false;
 
   function setAutoplay(val){
@@ -562,6 +704,31 @@
     return (lastSpace > 40 ? cut.slice(0, lastSpace) : cut).trim() + '\u2026';
   }
 
+  const STRIP_SUFFIXES = ['ations','ational','ically','ability','ibility','iveness','fulness','lessness',
+    'ation','ology','ingly','edly','ers','ies','ied','ing','ion','ive','ous','ary','ent','ant','ance',
+    'ence','ful','less','ness','ment','able','ible','al','ic','ed','er','ly','es','s'];
+
+  function wordStem(s){
+    let w = s.toLowerCase().replace(/[^a-z]/g, '');
+    for (const suf of STRIP_SUFFIXES){
+      if (w.length - suf.length >= 3 && w.endsWith(suf)){
+        w = w.slice(0, -suf.length);
+        break;
+      }
+    }
+    return w;
+  }
+
+  // True if `text` is basically just the headword restated (e.g. defining
+  // "obfuscate" as "obfuscated") rather than a real, independent definition.
+  function tooSimilarToWord(word, text){
+    const stem = wordStem(word);
+    if (stem.length < 4) return false;
+    const tokens = text.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
+    if (tokens.length > 3) return false; // a real sentence-length definition is fine even if it mentions the word
+    return tokens.some(t => wordStem(t) === stem);
+  }
+
   async function fetchWord(word){
     const res = await fetch(API + encodeURIComponent(word));
     if (!res.ok) throw new Error('not found');
@@ -575,15 +742,25 @@
     if (audio && audio.startsWith('//')) audio = 'https:' + audio;
 
     const allDefs = [];
+    const senseSeen = new Set();
+    const allSenses = [];
     (entry.meanings || []).forEach(m => {
       (m.definitions || []).forEach(d => {
         if (!d.definition) return;
-        const clauses = d.definition.split(';')
+        const fullText = d.definition.trim();
+        const clauses = fullText.split(';')
           .map(s => s.trim())
           .filter(Boolean);
         clauses.forEach(clause => {
-          allDefs.push({ pos: m.partOfSpeech || '', text: truncate(clause, 90) });
+          if (tooSimilarToWord(word, clause)) return; // don't let the answer just restate the headword
+          allDefs.push({ pos: m.partOfSpeech || '', text: truncate(clause, 90), full: fullText });
         });
+
+        const senseKey = (m.partOfSpeech || '') + '|' + fullText;
+        if (!senseSeen.has(senseKey)) {
+          senseSeen.add(senseKey);
+          allSenses.push({ pos: m.partOfSpeech || '', full: fullText });
+        }
       });
     });
 
@@ -597,7 +774,9 @@
       audio,
       pos: primary.pos,
       definition: primary.text,
-      allDefs
+      definitionFull: primary.full,
+      allDefs,
+      allSenses
     };
   }
 
@@ -612,6 +791,7 @@
     buildBtn.disabled = true;
     setupStatus.className = 'status';
     setupStatus.textContent = `Looking up ${words.length} word(s)...`;
+    quizOptionCount = options6Toggle.checked ? 6 : 4;
 
     const results = await Promise.allSettled(words.map(fetchWord));
 
@@ -647,7 +827,7 @@
     let msg = `Loaded ${entries.length} of ${words.length} word(s).`;
     if (notFound.length) msg += ` No entry found for: ${notFound.join(', ')}.`;
     if (networkErrors.length) msg += ` Network error looking up: ${networkErrors.join(', ')}.`;
-    if (entries.length < 6) msg += ` Note: with fewer than 6 words, some questions will show fewer than 6 options.`;
+    if (entries.length < quizOptionCount) msg += ` Note: with fewer than ${quizOptionCount} words, some questions will show fewer than ${quizOptionCount} options.`;
     setupStatus.className = 'status';
     setupStatus.textContent = msg;
 
@@ -669,7 +849,7 @@
       others.flatMap(e => e.allDefs.slice(1).map(d => d.text))
     ).filter(t => t !== correctText && !primaryPool.includes(t));
 
-    const distractors = dedupe([...primaryPool, ...extraPool]).slice(0, NUM_OPTIONS - 1);
+    const distractors = dedupe([...primaryPool, ...extraPool]).slice(0, quizOptionCount - 1);
 
     const optionTexts = shuffle([correctText, ...distractors]);
     const correctIndex = optionTexts.indexOf(correctText);
@@ -680,6 +860,8 @@
       audio: entry.audio,
       pos: entry.pos,
       correct: correctText,
+      correctFull: entry.definitionFull,
+      allSenses: entry.allSenses,
       options: optionTexts,
       correctIndex
     };
@@ -702,7 +884,7 @@
     questions = shuffle(questions);
     qIndex = 0;
     score = 0;
-    missed = [];
+    answered = [];
     setupEl.style.display = 'none';
     resultsEl.style.display = 'none';
     quizEl.style.display = 'block';
@@ -733,6 +915,8 @@
     feedback.textContent = '';
     feedback.className = 'feedback-text';
     nextBtn.style.display = 'none';
+    fullDefEl.style.display = 'none';
+    fullDefEl.innerHTML = '';
 
     qOptions.innerHTML = '';
     const letters = 'ABCDEF';
@@ -766,6 +950,23 @@
     audioPlayer.play().catch(() => sayBtn.classList.remove('playing'));
   }
 
+  function buildSenseRowsHTML(senses, testedFull){
+    return senses.map(s => {
+      const isTested = testedFull && s.full === testedFull;
+      const posTag = s.pos ? `<span class="sense-pos">${escapeHTML(s.pos)}</span> ` : '';
+      const tested = isTested ? ' <span class="sense-tested">(tested)</span>' : '';
+      return `<div class="sense-row">${posTag}${escapeHTML(s.full)}${tested}</div>`;
+    }).join('');
+  }
+
+  function buildFullDefHTML(q){
+    const senses = (q.allSenses && q.allSenses.length) ? q.allSenses : [{ pos: q.pos, full: q.correctFull || q.correct }];
+    const label = senses.length > 1
+      ? `<b>Full definition &middot; ${senses.length} senses</b>`
+      : `<b>Full definition</b>`;
+    return label + buildSenseRowsHTML(senses, q.correctFull || q.correct);
+  }
+
   function escapeHTML(str){
     const div = document.createElement('div');
     div.textContent = str;
@@ -792,8 +993,12 @@
     } else {
       feedback.textContent = 'Not quite.';
       feedback.className = 'feedback-text bad';
-      missed.push(q);
     }
+    answered.push({ word: q.word, correctFull: q.correctFull || q.correct, allSenses: q.allSenses, wasCorrect: i === q.correctIndex });
+
+    fullDefEl.innerHTML = buildFullDefHTML(q);
+    fullDefEl.style.display = 'block';
+
     folioScore.textContent = `Score ${score}`;
     nextBtn.style.display = 'inline-block';
   }
@@ -812,29 +1017,68 @@
     resultsEl.style.display = 'block';
     progressFill.style.width = '100%';
 
+    const total = answered.length;
     finalScore.textContent = score;
-    finalTotal.textContent = ` / ${questions.length}`;
+    finalTotal.textContent = ` / ${total}`;
 
-    const pct = Math.round((score / questions.length) * 100);
+    const pct = total ? Math.round((score / total) * 100) : 0;
     verdict.textContent = pct === 100 ? 'Full marks'
       : pct >= 70 ? 'Well read'
       : pct >= 40 ? 'Room to grow'
       : 'Back to the shelf';
 
-    missedList.innerHTML = '';
-    if (missed.length === 0){
-      missedList.innerHTML = '<h3>Missed words</h3><div class="missed-item">None — clean sweep.</div>';
-    } else {
-      const h3 = document.createElement('h3');
-      h3.textContent = 'Missed words';
-      missedList.appendChild(h3);
-      missed.forEach(q => {
-        const div = document.createElement('div');
-        div.className = 'missed-item';
-        div.innerHTML = `<b>${escapeHTML(q.word)}</b> — ${escapeHTML(q.correct)}`;
-        missedList.appendChild(div);
-      });
+    reviewList.innerHTML = '';
+    if (total === 0){
+      reviewList.innerHTML = '<h3>Review</h3><div class="review-item">No questions were answered.</div>';
+      continueOptions.style.display = 'none';
+      return;
     }
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Review';
+    reviewList.appendChild(h3);
+    answered.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      const mark = a.wasCorrect ? '\u2713' : '\u2717';
+      const markClass = a.wasCorrect ? 'right' : 'wrong';
+      const senses = (a.allSenses && a.allSenses.length) ? a.allSenses : [{ pos: '', full: a.correctFull }];
+      const expandable = senses.length > 1 || (senses[0] && senses[0].full !== a.correctFull);
+      const rowsHTML = buildSenseRowsHTML(senses, a.correctFull);
+
+      if (expandable) {
+        div.innerHTML = `<span class="review-mark ${markClass}">${mark}</span>`
+          + `<details class="review-details"><summary><b>${escapeHTML(a.word)}</b> — ${escapeHTML(a.correctFull)}</summary>`
+          + `<div class="review-expanded">${rowsHTML}</div></details>`;
+      } else {
+        div.innerHTML = `<span class="review-mark ${markClass}">${mark}</span><span><b>${escapeHTML(a.word)}</b> — ${escapeHTML(a.correctFull)}</span>`;
+      }
+      reviewList.appendChild(div);
+    });
+
+    // Build targeted "keep practicing" options based on what happened this round.
+    const answeredWords = new Set(answered.map(a => a.word));
+    const wrongWords = answered.filter(a => !a.wasCorrect).map(a => a.word);
+    const correctWords = answered.filter(a => a.wasCorrect).map(a => a.word);
+    const remainingWords = questions.filter(q => !answeredWords.has(q.word)).map(q => q.word);
+    const nonCorrectWords = Array.from(new Set([...remainingWords, ...wrongWords]));
+
+    continueRemainingBtn.style.display = remainingWords.length ? 'inline-block' : 'none';
+    continueRemainingBtn.onclick = () => startSubsetQuiz(remainingWords);
+
+    continueWrongBtn.style.display = wrongWords.length ? 'inline-block' : 'none';
+    continueWrongBtn.onclick = () => startSubsetQuiz(wrongWords);
+
+    continueNonPerfectBtn.style.display = (correctWords.length && nonCorrectWords.length) ? 'inline-block' : 'none';
+    continueNonPerfectBtn.onclick = () => startSubsetQuiz(nonCorrectWords);
+
+    continueOptions.style.display = (remainingWords.length || wrongWords.length) ? 'block' : 'none';
+  }
+
+  function startSubsetQuiz(wordsArray){
+    const subsetEntries = entries.filter(e => wordsArray.includes(e.word));
+    if (subsetEntries.length === 0) return;
+    questions = subsetEntries.map(e => buildQuestion(e, entries));
+    startQuiz();
   }
 
   buildBtn.addEventListener('click', () => {
@@ -847,13 +1091,15 @@
 
   nextBtn.addEventListener('click', nextQuestion);
 
+  finishBtn.addEventListener('click', showResults);
+
   restartBtn.addEventListener('click', () => {
     resultsEl.style.display = 'none';
     setupEl.style.display = 'block';
   });
 
   retryBtn.addEventListener('click', () => {
-    questions = questions.map((q, idx) => buildQuestion(entries[idx], entries));
+    questions = questions.map(q => buildQuestion(entries.find(e => e.word === q.word), entries));
     startQuiz();
   });
 
